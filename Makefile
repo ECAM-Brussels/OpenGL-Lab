@@ -1,7 +1,17 @@
-all: lab
+# Libraries for Linux
+EXE = lab
+LIBS = -lGL -lpng -lGLEW -lglfw
 
-lab: main.o Application.o shader.o Table.o Mesh.o Object.o texture.o Program.o Computer.o Triangle.o
-	g++ -o lab main.o Application.o shader.o Table.o Mesh.o Object.o texture.o Program.o Computer.o Triangle.o -lglfw3 -lglew32 -lopengl32 -lpng
+# Libraries for MSYS2
+ifeq "$(OS)" "Windows_NT"
+    EXE = lab.exe
+    LIBS = -lglfw3 -lglew32 -lopengl32 -lpng
+endif
+
+all: $(EXE)
+
+$(EXE): main.o Application.o shader.o Table.o Mesh.o Object.o texture.o Program.o Computer.o Triangle.o
+	g++ -o $(EXE) main.o Application.o shader.o Table.o Mesh.o Object.o texture.o Program.o Computer.o Triangle.o $(LIBS)
 
 main.o: main.cpp
 	g++ -o main.o -c main.cpp
@@ -37,4 +47,4 @@ clean:
 	rm -rf *.o
 
 mrproper: clean
-	rm -rf lab
+	rm -rf $(EXE)
